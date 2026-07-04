@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head>
+    <base href="$FLUTTER_BASE_HREF" />
+
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta
+      name="description"
+      content="Sistem Informasi Jemaat dan Pelayanan GPI Yehuda."
+    />
+    <meta name="theme-color" content="#0D3D3A" />
+
+    <!-- iOS meta tags & icons -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="GPI Yehuda" />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icons/Icon-512.png" />
+
+    <!-- iOS splash screen (fallback) -->
+    <link
+      rel="apple-touch-startup-image"
+      href="icons/Icon-512.png"
+      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <title>GPI Yehuda</title>
+    <link rel="manifest" href="manifest.json" />
+
+    <meta
+      name="google-signin-client_id"
+      content="YOUR_GOOGLE_WEB_CLIENT_ID.apps.googleusercontent.com"
+    />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <script>
+      // --- PWA Bridge for Flutter (accessed via dart:js_interop) ---
+      window.__pwa = {
+        deferredPrompt: null,
+        canInstall: false,
+        installed: (function () {
+          var m = window.matchMedia("(display-mode: standalone)").matches;
+          try {
+            return m || navigator.standalone === true;
+          } catch (_) {
+            return m;
+          }
+        })(),
+        isIOS: (function () {
+          var ua = navigator.userAgent.toLowerCase();
+          if (/iphone|ipad|ipod/.test(ua)) return true;
+          if (/macintosh/.test(ua) && navigator.maxTouchPoints > 1) return true;
+          return false;
+        })(),
+        changed: false,
+      };
+
+      window.addEventListener("beforeinstallprompt", function (e) {
+        e.preventDefault();
+        window.__pwa.deferredPrompt = e;
+        window.__pwa.canInstall = true;
+        window.__pwa.changed = true;
+      });
+
+      window.addEventListener("appinstalled", function () {
+        window.__pwa.installed = true;
+        window.__pwa.canInstall = false;
+        window.__pwa.deferredPrompt = null;
+        window.__pwa.changed = true;
+      });
+
+      window.pwaPromptInstall = function () {
+        var dp = window.__pwa.deferredPrompt;
+        if (!dp) return;
+        dp.prompt();
+        dp.userChoice.then(function (result) {
+          window.__pwa.installed = true;
+          window.__pwa.canInstall = false;
+          window.__pwa.deferredPrompt = null;
+          window.__pwa.changed = true;
+        });
+      };
+
+      window.pwaPollChanged = function () {
+        var c = window.__pwa.changed;
+        window.__pwa.changed = false;
+        return c;
+      };
+
+      // --- Service Worker ---
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("flutter_service_worker.js");
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <script src="flutter_bootstrap.js" async></script>
+  </body>
+</html>

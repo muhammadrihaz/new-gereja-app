@@ -1,0 +1,52 @@
+### General
+.DS_Store
+.idea/
+.vscode/
+.serena/
+*.iml
+# Firebase Service Account
+new-gereja-gpi-cf0329e235a0.json
+
+### Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+.packages
+build/
+coverage/
+pubspec.lock
+
+### Android/iOS
+android/.gradle/
+android/app/build/
+android/local.properties
+ios/Pods/
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/project.xcworkspace/
+ios/Runner.xcodeproj/xcuserdata/
+ios/Flutter/ephemeral/
+macos/Pods/
+macos/Runner.xcworkspace/
+macos/Runner.xcodeproj/project.xcworkspace/
+macos/Runner.xcodeproj/xcuserdata/
+linux/flutter/ephemeral/
+windows/flutter/ephemeral/
+
+### Laravel
+api/vendor/
+api/storage/
+api/bootstrap/cache/
+api/.phpunit.result.cache
+
+### Env files
+.env
+.env.docker
+.env.local
+api/.env
+api/.env.docker
+
+### Node
+**/node_modules/
+**/npm-debug.log
+**/yarn-error.log

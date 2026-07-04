@@ -1,0 +1,235 @@
+name: Deploy Laravel & Flutter Web
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  # ==========================
+  # TEST
+  # ==========================
+  tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: gereja_api_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mariadb-admin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, dom, curl, libxml, mysql, bcmath
+          coverage: none
+
+      - name: Install Composer Dependencies
+        working-directory: api
+        run: |
+          mkdir -p bootstrap/cache
+          mkdir -p storage/framework/cache
+          mkdir -p storage/framework/views
+          mkdir -p storage/framework/sessions
+
+          chmod -R 775 bootstrap storage
+
+          composer install \
+            --no-progress \
+            --no-interaction
+
+      - name: Run Laravel Test
+        working-directory: api
+        run: |
+
+          if [ -f .env.test ]; then
+            cp .env.test .env
+          else
+            cp .env.example .env
+          fi
+
+          sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
+          sed -i 's/^DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+          sed -i 's/^DB_PORT=.*/DB_PORT=3306/' .env
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=gereja_api_test/' .env
+          sed -i 's/^DB_USERNAME=.*/DB_USERNAME=root/' .env
+          sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=/' .env
+
+          php artisan key:generate
+          php artisan optimize:clear
+          php artisan migrate --force
+          php artisan storage:link
+          php artisan test
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.x
+
+      - name: Flutter Analyze
+        run: |
+          flutter clean
+          flutter pub get
+          flutter analyze
+
+  # ==========================
+  # DEPLOY LARAVEL
+  # ==========================
+  deploy-laravel:
+    needs: tests
+    runs-on: ubuntu-latest
+    env:
+      FCM_CREDENTIALS_BASE64: ${{ secrets.FCM_CREDENTIALS_BASE64 }}
+
+    steps:
+      - name: Deploy Laravel
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+
+          script: |
+
+              set -e
+
+              APP_ROOT="/var/www/gereja-gpiyehuda"
+
+              echo "===== Laravel Deployment ====="
+
+              cd $APP_ROOT
+
+              git config --global --add safe.directory $APP_ROOT
+
+              git fetch origin master
+              git reset --hard origin/master
+
+              cd api
+
+              echo "== Ensure directories =="
+
+              mkdir -p bootstrap/cache \
+                       storage/framework/cache \
+                       storage/framework/views \
+                       storage/framework/sessions
+
+              echo "== Fix permissions safely =="
+
+              chown -R www-data:www-data storage bootstrap/cache || true
+
+              find storage -type d -exec chmod 775 {} \; || true
+              find bootstrap/cache -type d -exec chmod 775 {} \; || true
+
+              find storage -type f -exec chmod 664 {} \; || true
+
+               echo "== Setup .env =="
+
+               if [ ! -f .env ]; then
+                 cp .env.production .env
+               fi
+
+               echo "== Setup FCM Service Account =="
+
+               mkdir -p storage/app
+
+               if [ -n "$FCM_CREDENTIALS_BASE64" ]; then
+                 echo "$FCM_CREDENTIALS_BASE64" | base64 -d > storage/app/firebase-service-account.json
+                 chmod 640 storage/app/firebase-service-account.json
+               fi
+
+               # Set the absolute path to the credentials JSON for the FCM v1 token provider
+               chmod -R 775 bootstrap storage || true
+
+               # Update .env placeholder for FCM_CREDENTIALS_JSON anyway; the deploy script
+               # below sets the actual BASE64. The config reads CREDENTIALS_BASE64.
+               sed -i 's|^FCM_CREDENTIALS_JSON=|FCM_CREDENTIALS_JSON=storage/app/firebase-service-account.json|' .env || true
+
+              echo "== Install dependencies =="
+
+              composer install \
+                --no-dev \
+                --optimize-autoloader \
+                --no-interaction
+
+              echo "== Laravel optimize =="
+
+              php artisan migrate --force
+
+              php artisan optimize:clear
+
+              php artisan config:cache
+              php artisan route:cache
+              php artisan view:cache
+
+              echo "Laravel Deploy Success"
+
+  # ==========================
+  # DEPLOY FLUTTER
+  # ==========================
+  deploy-flutter:
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.x
+
+      - name: Build Flutter Web
+        run: |
+          flutter pub get
+          flutter build web --release \
+            --dart-define=API_BASE_URL=https://api.gereja-gpiyehuda.my.id/api/v1
+
+      - name: Upload Flutter to Temp Directory
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "build/web/*"
+          target: "/var/www/new-gpi-yehuda/public_html_new"
+          strip_components: 2
+
+      - name: Swap to New Release
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+
+          script: |
+
+            set -e
+
+            RELEASE_DIR="/var/www/new-gpi-yehuda/public_html"
+            NEW_DIR="/var/www/new-gpi-yehuda/public_html_new"
+            PREV_DIR="/var/www/new-gpi-yehuda/public_html_prev"
+
+            # Remove previous backup if exists
+            rm -rf "$PREV_DIR"
+
+            # If current release exists, move it to backup
+            if [ -d "$RELEASE_DIR" ]; then
+              mv "$RELEASE_DIR" "$PREV_DIR"
+            fi
+
+            # Promote new build
+            mv "$NEW_DIR" "$RELEASE_DIR"
+
+            echo "Flutter Deploy Success"

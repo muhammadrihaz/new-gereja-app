@@ -1,0 +1,964 @@
+{
+    "info": {
+        "name": "GPI Yehuda API v1",
+        "description": "Collection API Laravel Sanctum untuk sistem informasi GPI Yehuda (dynamic service forms, events, devices, notifications).",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Health",
+            "item": [
+                {
+                    "name": "GET /health",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/health",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "POST /auth/register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"novalia_yordan\",\n  \"email\": \"nova@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"nomor_kk\": \"5171012345678901\",\n  \"jenis_kelamin\": \"P\",\n  \"usia\": 22,\n  \"alamat\": \"Jl. Sunset Road No. 767, Bali\",\n  \"fcm_token\": \"token_fcm_register_min_20_chars\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/register",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /auth/login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"nova@example.com\",\n  \"password\": \"password123\",\n  \"fcm_token\": \"token_fcm_login_min_20_chars\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET /auth/me",
+                    "request": {
+                        "method": "GET",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/me",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "me"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /auth/logout",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/logout",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "logout"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Devices",
+            "item": [
+                {
+                    "name": "GET /devices",
+                    "request": {
+                        "method": "GET",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "X-Device-Token",
+                                "value": "{{device_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/devices",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "devices"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /devices/register",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"fcm_token\": \"{{device_token}}\",\n  \"device_name\": \"iPhone 15 Pro\",\n  \"device_type\": \"ios\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/devices/register",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "devices",
+                                "register"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "DELETE /devices/revoke",
+                    "request": {
+                        "method": "DELETE",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"fcm_token\": \"{{device_token}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/devices/revoke",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "devices",
+                                "revoke"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "DELETE /devices/revoke-all",
+                    "request": {
+                        "method": "DELETE",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/devices/revoke-all",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "devices",
+                                "revoke-all"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Events",
+            "item": [
+                {
+                    "name": "GET /events",
+                    "request": {
+                        "method": "GET",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/events?status=upcoming&page=1&per_page=10&sort_by=date&sort_order=asc",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "events"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "upcoming"
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "date"
+                                },
+                                {
+                                    "key": "sort_order",
+                                    "value": "asc"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /events (admin)",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Ibadah Raya Minggu\",\n  \"description\": \"Ibadah rutin mingguan dengan tema Pengharapan\",\n  \"date\": \"2026-04-12T09:00:00+08:00\",\n  \"location\": {\n    \"name\": \"Gedung Utama GPI Yehuda\",\n    \"address\": \"Jl. Sunset Road No. 767, Denpasar, Bali\",\n    \"latitude\": -8.670458,\n    \"longitude\": 115.212629,\n    \"place_id\": \"ChIJ-example-place-id\",\n    \"maps_url\": \"https://maps.google.com/?q=-8.670458,115.212629\"\n  },\n  \"category\": \"Ibadah\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/events",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "events"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /events/{id}/documentation (admin)",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "report_summary",
+                                    "value": "Ringkasan dokumentasi event",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "files[]",
+                                    "type": "file",
+                                    "src": ""
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/events/{{event_id}}/documentation",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "events",
+                                "{{event_id}}",
+                                "documentation"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET /events/{id}/documentation/download",
+                    "request": {
+                        "method": "GET",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/events/{{event_id}}/documentation/download",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "events",
+                                "{{event_id}}",
+                                "documentation",
+                                "download"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Services",
+            "item": [
+                {
+                    "name": "GET /services/categories",
+                    "request": {
+                        "method": "GET",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/categories",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "categories"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET /services/forms",
+                    "request": {
+                        "method": "GET",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/forms",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "forms"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET /services/forms/{category}",
+                    "request": {
+                        "method": "GET",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/forms/{{service_category}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "forms",
+                                "{{service_category}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /services/apply",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"category\": \"baptisan\",\n  \"form_data\": {\n    \"nama_lengkap\": \"Anak A\",\n    \"tanggal_lahir\": \"2026-01-01\",\n    \"nama_ayah\": \"Budi\",\n    \"nama_ibu\": \"Sari\"\n  },\n  \"attachments\": [\"https://files.example.com/kk.pdf\", \"https://files.example.com/ktp.pdf\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/apply",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "apply"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /services/apply (pernikahan)",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"category\": \"pernikahan\",\n  \"form_data\": {\n    \"nama_mempelai_pria\": \"Pria A\",\n    \"nama_mempelai_wanita\": \"Wanita B\",\n    \"tanggal_rencana\": \"2026-06-01\"\n  },\n  \"attachments\": [\"https://files.example.com/ktp-pria.pdf\", \"https://files.example.com/ktp-wanita.pdf\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/apply",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "apply"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /services/apply (penyerahan_anak)",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"category\": \"penyerahan_anak\",\n  \"form_data\": {\n    \"nama_anak\": \"Anak C\",\n    \"tanggal_lahir\": \"2025-05-10\",\n    \"nama_orang_tua\": \"Keluarga C\"\n  },\n  \"attachments\": [\"https://files.example.com/akta-kelahiran.pdf\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/apply",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "apply"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /services/apply (permohonan_doa)",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"category\": \"permohonan_doa\",\n  \"form_data\": {\n    \"pokok_doa\": \"Doa kesembuhan keluarga\",\n    \"catatan_tambahan\": \"Mohon didoakan pada ibadah minggu\"\n  },\n  \"attachments\": []\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/apply",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "apply"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /services/forms (admin)",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"category\": \"konseling\",\n  \"name\": \"Form Konseling\",\n  \"is_active\": true,\n  \"fields\": [\n    {\"key\": \"nama_lengkap\", \"type\": \"string\", \"required\": true, \"label\": \"Nama Lengkap\"},\n    {\"key\": \"jadwal_preferensi\", \"type\": \"string\", \"required\": true, \"label\": \"Jadwal Preferensi\"},\n    {\"key\": \"butuh_anonim\", \"type\": \"boolean\", \"required\": false, \"label\": \"Butuh Anonim\"}\n  ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/forms",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "forms"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "PUT /services/forms/{category} (admin)",
+                    "request": {
+                        "method": "PUT",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"category\": \"konseling\",\n  \"name\": \"Form Konseling v2\",\n  \"is_active\": true,\n  \"fields\": [\n    {\"key\": \"nama_lengkap\", \"type\": \"string\", \"required\": true},\n    {\"key\": \"jadwal_preferensi\", \"type\": \"string\", \"required\": true},\n    {\"key\": \"catatan\", \"type\": \"string\", \"required\": false}\n  ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/forms/{{service_category}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "forms",
+                                "{{service_category}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "DELETE /services/forms/{category} (admin)",
+                    "request": {
+                        "method": "DELETE",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/forms/{{service_category}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "forms",
+                                "{{service_category}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "PATCH /services/applications/{id}/status (admin)",
+                    "request": {
+                        "method": "PATCH",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"status\": \"approved\",\n  \"admin_note\": \"Jadwal disetujui untuk minggu depan\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/applications/{{application_id}}/status",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "applications",
+                                "{{application_id}}",
+                                "status"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET /services/applications/{id}/certificate/pdf",
+                    "request": {
+                        "method": "GET",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/services/applications/{{application_id}}/certificate/pdf",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "services",
+                                "applications",
+                                "{{application_id}}",
+                                "certificate",
+                                "pdf"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Notifications",
+            "item": [
+                {
+                    "name": "POST /notifications/broadcast (admin)",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Pengingat Ibadah\",\n  \"message\": \"Shalom, jangan lupa Ibadah Raya besok pukul 09:00 WITA\",\n  \"target_type\": \"all\",\n  \"target_filters\": {}\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/notifications/broadcast",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                "broadcast"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /notifications/broadcast (role)",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Info Jemaat\",\n  \"message\": \"Pengumuman khusus jemaat\",\n  \"target_type\": \"role\",\n  \"target_filters\": {\n    \"role\": \"jemaat\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/notifications/broadcast",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                "broadcast"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST /notifications/broadcast (service_applicants)",
+                    "request": {
+                        "method": "POST",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Status Layanan\",\n  \"message\": \"Pengajuan baptisan yang disetujui sudah bisa dijadwalkan\",\n  \"target_type\": \"service_applicants\",\n  \"target_filters\": {\n    \"service_category\": \"baptisan\",\n    \"service_status\": \"approved\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/notifications/broadcast",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                "broadcast"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080/api/v1"
+        },
+        {
+            "key": "token",
+            "value": ""
+        },
+        {
+            "key": "device_token",
+            "value": "token_device_min_20_chars"
+        },
+        {
+            "key": "event_id",
+            "value": "1"
+        },
+        {
+            "key": "application_id",
+            "value": "1"
+        },
+        {
+            "key": "service_category",
+            "value": "baptisan"
+        }
+    ]
+}
