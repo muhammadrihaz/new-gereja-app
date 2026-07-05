@@ -374,9 +374,8 @@ class _NewsCard extends StatelessWidget {
     if (cover is Map<String, dynamic>) {
       final url = cover['url'];
       if (url is String && url.isNotEmpty) {
-        if (!kIsWeb && url.contains('localhost')) {
-          return url.replaceAll(RegExp(r'http://localhost(:\d+)?'), 'https://gpiyehuda-bali.my.id');
-        }
+        // Force secure domain mapping for web & mobile
+        return url.replaceAll(RegExp(r'http://(localhost|116\.212\.73\.88)(:\d+)?'), 'https://gpiyehuda-bali.my.id');
         return url;
       }
     }
@@ -662,9 +661,8 @@ class _JemaatBeritaDetailPageState extends State<JemaatBeritaDetailPage> {
     if (cover is Map<String, dynamic>) {
       final url = cover['url'];
       if (url is String && url.isNotEmpty) {
-        if (!kIsWeb && url.contains('localhost')) {
-          return url.replaceAll(RegExp(r'http://localhost(:\d+)?'), 'https://gpiyehuda-bali.my.id');
-        }
+        // Force secure domain mapping for web & mobile
+        return url.replaceAll(RegExp(r'http://(localhost|116\.212\.73\.88)(:\d+)?'), 'https://gpiyehuda-bali.my.id');
         return url;
       }
     }
@@ -698,8 +696,8 @@ class _GalleryGrid extends StatelessWidget {
           itemBuilder: (context, index) {
             final img = images[index];
             var url = img['url']?.toString();
-            if (url != null && !kIsWeb && url.contains('localhost')) {
-              url = url.replaceAll(RegExp(r'http://localhost(:\d+)?'), 'https://gpiyehuda-bali.my.id');
+            if (url != null) {
+              url = url.replaceAll(RegExp(r'http://(localhost|116\.212\.73\.88)(:\d+)?'), 'https://gpiyehuda-bali.my.id');
             }
             return GestureDetector(
               onTap: () => _openViewer(context, images, index),
