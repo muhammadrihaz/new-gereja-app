@@ -41,7 +41,7 @@ class NotificationController extends Controller
 
         $summaryMessage = $result['success_count'] > 0
             ? "Broadcast terkirim ke {$result['success_count']} dari {$result['target_count']} device"
-            : "Broadcast gagal terkirim ke {$result['failed_count']} device. Cek konfigurasi FCM di server.";
+            : "Broadcast tersimpan di database untuk dikirim kemudian.";
 
         return $this->successResponse([
             'title' => $request->string('title')->toString(),

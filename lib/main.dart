@@ -84,13 +84,13 @@ class _GerejaAppState extends State<GerejaApp> {
       }
 
       // ✅ Production web → pakai subdomain API yang benar
-      return 'https://api.gereja-gpiyehuda.my.id/api/v1';
+      return 'http://116.212.73.88:8081/api/v1';
     }
 
     // Mobile/desktop emulator setup
     // Untuk testing di emulator lokal (BlueStacks dll), gunakan IP LAN Host tempat Docker berjalan
     // Pastikan mengganti kembali ke https://api.gereja-gpiyehuda.my.id/api/v1 jika mau production!
-    return 'http://10.24.49.34:8081/api/v1';
+    return 'http://116.212.73.88:8081/api/v1';
   }
 
   @override

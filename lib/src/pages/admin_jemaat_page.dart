@@ -20,8 +20,9 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
   List<Map<String, dynamic>> _jemaat = <Map<String, dynamic>>[];
   bool _loading = true;
   String? _error;
+  int _totalJemaat = 0;
   final int _page = 1;
-  final int _perPage = 20;
+  final int _perPage = 1000;
 
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -53,13 +54,20 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
         throw const ApiError(message: 'Token tidak tersedia');
       }
 
-      _jemaat = await _api.users(
+      final payload = await _api.usersPaginated(
         token,
         role: 'jemaat',
         perPage: _perPage,
         page: _page,
         search: _searchQuery.isNotEmpty ? _searchQuery : null,
       );
+      
+      _jemaat = (payload['data'] as List?)
+              ?.whereType<Map<String, dynamic>>()
+              .toList() ??
+          [];
+          
+      _totalJemaat = (payload['meta']?['pagination']?['total'] as num?)?.toInt() ?? _jemaat.length;
     } on ApiError catch (error) {
       _error =
           '${error.message}${error.traceId != null ? ' (trace: ${error.traceId})' : ''}';
@@ -282,6 +290,17 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
                     ),
                   ],
                 ),
+                if (!_loading && _error == null) ...[
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Text(
+                        'Total Data Jemaat: $_totalJemaat',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

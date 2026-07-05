@@ -865,7 +865,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       if (success > 0) {
         _snack('Broadcast terkirim ke $success device');
       } else {
-        _snack('Broadcast gagal — FCM belum dikonfigurasi di server');
+        _snack('Broadcast tersimpan (Menunggu konfigurasi FCM server)');
       }
     } on ApiError catch (error) {
       _snack(error.message);
@@ -965,6 +965,13 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
           ),
         ],
       ),
+      floatingActionButton: _menu == 4
+          ? FloatingActionButton.extended(
+              onPressed: _bukaFormManual,
+              icon: const Icon(Icons.add),
+              label: const Text('Tambah Manual'),
+            )
+          : null,
       drawer: desktop ? null : Drawer(child: _sideMenu(closeOnSelect: true)),
       body: Row(
         children: [
@@ -1004,7 +1011,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       ('Kategori Event', Icons.category_outlined),
       ('Form Builder Layanan', Icons.dashboard_customize_outlined),
       ('Pengajuan Layanan', Icons.assignment_outlined),
-      ('Data Kartu Keluarga', Icons.groups_2_outlined),
+      // ('Data Kartu Keluarga', Icons.groups_2_outlined), // Disembunyikan sementara
       ('Manajemen Jemaat', Icons.people_outline),
       ('Kelola Berita', Icons.newspaper_outlined),
       ('Broadcast', Icons.campaign_outlined),
@@ -1113,16 +1120,14 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       case 4:
         return _modulPengajuan();
       case 5:
-        return _modulKartuKeluarga();
-      case 6:
         return _modulManajemenJemaat();
-      case 7:
+      case 6:
         return _modulBerita();
-      case 8:
+      case 7:
         return _modulBroadcast();
-      case 9:
+      case 8:
         return _modulEditProfilAdmin();
-      case 10:
+      case 9:
         return _modulProfilGereja();
       default:
         return _modulRingkasan();
@@ -1166,6 +1171,8 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     int page,
     int perPage,
   ) {
+    if (items.isEmpty) return [];
+    if (page < 1) page = 1;
     final start = (page - 1) * perPage;
     final end = start + perPage;
     return items.sublist(
@@ -1950,11 +1957,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             const Text(
               'Pengajuan Layanan',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-            ),
-            FilledButton.icon(
-              onPressed: _bukaFormManual,
-              icon: const Icon(Icons.add),
-              label: const Text('Tambah Manual'),
             ),
           ],
         ),

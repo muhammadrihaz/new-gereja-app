@@ -60,9 +60,9 @@ class JemaatManagementController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:160'],
-            'username' => ['required', 'string', 'max:60', 'unique:users,username'],
+            'username' => ['nullable', 'string', 'max:60', 'unique:users,username'],
             'email' => ['required', 'email', 'max:191', 'unique:users,email'],
-            'password' => ['required', 'string', Password::min(8)],
+            'password' => ['nullable', 'string', Password::min(8)],
             'nomor_kk' => ['required', 'string', 'min:16', 'max:32', 'exists:kk_registrations,nomor_kk'],
             'jenis_kelamin' => ['nullable', 'in:L,P'],
             'usia' => ['nullable', 'integer', 'min:1', 'max:120'],
@@ -77,11 +77,14 @@ class JemaatManagementController extends Controller
             'username.unique' => 'Username sudah terdaftar',
         ]);
 
+        $username = $validated['username'] ?? 'user_' . substr(md5(uniqid()), 0, 8);
+        $password = $validated['password'] ?? 'TempP@ss' . time();
+
         $user = User::query()->create([
             'name' => $validated['name'],
-            'username' => $validated['username'],
+            'username' => $username,
             'email' => $validated['email'],
-            'password' => $validated['password'],
+            'password' => $password,
             'nomor_kk' => $validated['nomor_kk'],
             'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
             'tempat_lahir' => $validated['tempat_lahir'] ?? null,

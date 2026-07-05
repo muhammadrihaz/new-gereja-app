@@ -850,6 +850,24 @@ class ApiClient {
     return data;
   }
 
+  Future<Map<String, dynamic>> usersPaginated(
+    String token, {
+    String? role,
+    int perPage = 30,
+    int page = 1,
+    String? search,
+  }) async {
+    final query = <String, dynamic>{'per_page': perPage, 'page': page};
+    if (role != null) query['role'] = role;
+    if (search != null && search.isNotEmpty) query['search'] = search;
+
+    final response = await http.get(
+      _uri('/users', query),
+      headers: _headers(token: token),
+    );
+    return await _decode(response) as Map<String, dynamic>;
+  }
+
   Future<List<Map<String, dynamic>>> kkRegistrations(
     String token, {
     int perPage = 30,

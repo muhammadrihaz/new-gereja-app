@@ -382,13 +382,10 @@ class _AdminJemaatFormPageState extends State<AdminJemaatFormPage> {
                 readOnly: _isEdit,
                 decoration: InputDecoration(
                   labelText:
-                      'Username (wajib)${_isEdit ? ' - tidak bisa diubah' : ''}',
+                      'Username (opsional)${_isEdit ? ' - tidak bisa diubah' : ''}',
                   prefixIcon: const Icon(Icons.alternate_email),
                 ),
                 validator: (value) {
-                  if (!_isEdit && (value == null || value.trim().isEmpty)) {
-                    return 'Username wajib diisi';
-                  }
                   return null;
                 },
               ),
@@ -399,13 +396,10 @@ class _AdminJemaatFormPageState extends State<AdminJemaatFormPage> {
                 decoration: InputDecoration(
                   labelText: _isEdit
                       ? 'Password Baru (kosongkan jika tidak mengubah)'
-                      : 'Password (wajib)',
+                      : 'Password (opsional)',
                   prefixIcon: const Icon(Icons.lock_outline),
                 ),
                 validator: (value) {
-                  if (!_isEdit && (value == null || value.isEmpty)) {
-                    return 'Password wajib diisi';
-                  }
                   if (value != null && value.isNotEmpty && value.length < 8) {
                     return 'Password minimal 8 karakter';
                   }
