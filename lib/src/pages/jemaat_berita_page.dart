@@ -375,7 +375,7 @@ class _NewsCard extends StatelessWidget {
       final url = cover['url'];
       if (url is String && url.isNotEmpty) {
         if (!kIsWeb && url.contains('localhost')) {
-          return url.replaceFirst('localhost', '116.212.73.88:8081');
+          return url.replaceAll(RegExp(r'http://localhost(:\d+)?'), 'https://gpiyehuda-bali.my.id');
         }
         return url;
       }
@@ -663,7 +663,7 @@ class _JemaatBeritaDetailPageState extends State<JemaatBeritaDetailPage> {
       final url = cover['url'];
       if (url is String && url.isNotEmpty) {
         if (!kIsWeb && url.contains('localhost')) {
-          return url.replaceFirst('localhost', '116.212.73.88:8081');
+          return url.replaceAll(RegExp(r'http://localhost(:\d+)?'), 'https://gpiyehuda-bali.my.id');
         }
         return url;
       }
@@ -699,7 +699,7 @@ class _GalleryGrid extends StatelessWidget {
             final img = images[index];
             var url = img['url']?.toString();
             if (url != null && !kIsWeb && url.contains('localhost')) {
-              url = url.replaceFirst('localhost', '116.212.73.88:8081');
+              url = url.replaceAll(RegExp(r'http://localhost(:\d+)?'), 'https://gpiyehuda-bali.my.id');
             }
             return GestureDetector(
               onTap: () => _openViewer(context, images, index),
