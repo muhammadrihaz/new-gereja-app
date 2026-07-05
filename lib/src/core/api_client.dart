@@ -137,10 +137,14 @@ class ApiClient {
       });
     }
 
+    String baseMessage = (mapBody['message'] as String?) ?? 'Request gagal (${response.statusCode})';
+    if (fieldErrors != null && fieldErrors.isNotEmpty) {
+      final details = fieldErrors.values.expand((e) => e).join(', ');
+      baseMessage = '$baseMessage: $details';
+    }
+
     throw ApiError(
-      message:
-          (mapBody['message'] as String?) ??
-          'Request gagal (${response.statusCode})',
+      message: baseMessage,
       errorCode: mapBody['error_code'] as String?,
       traceId: mapBody['trace_id'] as String?,
       statusCode: response.statusCode,

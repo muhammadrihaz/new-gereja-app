@@ -18,7 +18,7 @@ class RegisterRequest extends FormRequest
             'username' => ['required', 'string', 'max:60', 'unique:users,username'],
             'email' => ['nullable', 'email', 'max:191', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'nomor_kk' => ['required', 'string', 'min:16', 'max:32', 'exists:kk_registrations,nomor_kk'],
+            'nomor_kk' => ['required', 'string', 'min:16', 'max:32'],
             'jenis_kelamin' => ['nullable', 'in:L,P'],
             'usia' => ['nullable', 'integer', 'min:1', 'max:120'],
             'tempat_lahir' => ['nullable', 'string', 'max:100'],
