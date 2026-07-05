@@ -821,8 +821,8 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
                 ),
               ),
               Text((_gereja['address'] as String?) ?? 'Bali, Indonesia'),
-              if ((_gereja['phone_number'] as String?)?.isNotEmpty == true)
-                Text('Telp: ${_gereja['phone_number']}'),
+              if ((_gereja['phone'] as String?)?.isNotEmpty == true)
+                Text('Telp: ${_gereja['phone']}'),
               if ((_gereja['email'] as String?)?.isNotEmpty == true)
                 Text('Email: ${_gereja['email']}'),
               const SizedBox(height: 8),

@@ -63,7 +63,7 @@ class JemaatManagementController extends Controller
             'username' => ['nullable', 'string', 'max:60', 'unique:users,username'],
             'email' => ['required', 'email', 'max:191', 'unique:users,email'],
             'password' => ['nullable', 'string', Password::min(8)],
-            'nomor_kk' => ['required', 'string', 'min:16', 'max:32', 'exists:kk_registrations,nomor_kk'],
+            'nomor_kk' => ['required', 'string', 'min:16', 'max:32'],
             'jenis_kelamin' => ['nullable', 'in:L,P'],
             'usia' => ['nullable', 'integer', 'min:1', 'max:120'],
             'tempat_lahir' => ['nullable', 'string', 'max:100'],
@@ -72,7 +72,6 @@ class JemaatManagementController extends Controller
             'phone_number' => ['nullable', 'string', 'max:20'],
             'status' => ['nullable', 'in:active,jemaat,simpatisan'],
         ], [
-            'nomor_kk.exists' => 'Nomor KK tidak terdaftar di sistem',
             'email.unique' => 'Email sudah terdaftar',
             'username.unique' => 'Username sudah terdaftar',
         ]);
@@ -134,7 +133,7 @@ class JemaatManagementController extends Controller
             'name' => ['nullable', 'string', 'max:160'],
             'username' => ['nullable', 'string', 'max:60', 'unique:users,username,' . $jemaat->id],
             'email' => ['nullable', 'email', 'max:191', 'unique:users,email,' . $jemaat->id],
-            'nomor_kk' => ['nullable', 'string', 'min:16', 'max:32', 'exists:kk_registrations,nomor_kk'],
+            'nomor_kk' => ['nullable', 'string', 'min:16', 'max:32'],
             'jenis_kelamin' => ['nullable', 'in:L,P'],
             'usia' => ['nullable', 'integer', 'min:1', 'max:120'],
             'tempat_lahir' => ['nullable', 'string', 'max:100'],
@@ -142,7 +141,12 @@ class JemaatManagementController extends Controller
             'alamat' => ['required', 'string'],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'status' => ['nullable', 'in:active,jemaat,simpatisan'],
+            'password' => ['nullable', 'string', Password::min(8)],
         ]);
+
+        if (empty($validated['password'])) {
+            unset($validated['password']);
+        }
 
         $jemaat->update($validated);
 
