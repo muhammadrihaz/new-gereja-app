@@ -75,37 +75,72 @@ class _PwaInstallFabState extends State<PwaInstallFab> {
   }
 
   Widget _androidFab() {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return SafeArea(
       child: Align(
-        alignment: Alignment.bottomRight,
+        alignment: Alignment.topCenter,
         child: Padding(
-          padding: const EdgeInsets.only(
-            right: 16,
-            bottom: kBottomNavigationBarHeight + 16,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              FloatingActionButton.small(
-                heroTag: 'pwa-install-fab-close',
-                onPressed: () => setState(() => _dismissed = true),
-                child: const Icon(Icons.close, size: 20),
+          padding: const EdgeInsets.only(top: 60, left: 24, right: 24),
+          child: Material(
+            elevation: 8,
+            borderRadius: BorderRadius.circular(16),
+            color: colorScheme.surface,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                   Row(
+                    children: [
+                      Icon(Icons.get_app, size: 32, color: colorScheme.primary),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Install Aplikasi Gereja',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Tambahkan ke layar utama untuk pengalaman seperti aplikasi native (APK).',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => setState(() => _dismissed = true),
+                        child: const Text('Nanti saja'),
+                      ),
+                      const SizedBox(width: 12),
+                      FilledButton.icon(
+                        onPressed: _prompting ? null : _handleInstallTap,
+                        icon: _prompting
+                            ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                              )
+                            : const Icon(Icons.download_for_offline),
+                        label: Text(_prompting ? 'Memproses...' : 'Install Sekarang'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              FloatingActionButton.extended(
-                heroTag: 'pwa-install-fab',
-                onPressed: _prompting ? null : _handleInstallTap,
-                icon: _prompting
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.download_for_offline_outlined),
-                label: Text(_prompting ? 'Memproses...' : 'Install App'),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -119,32 +154,44 @@ class _PwaInstallFabState extends State<PwaInstallFab> {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
           child: Material(
-            elevation: 4,
-            borderRadius: BorderRadius.circular(12),
-            color: colorScheme.primary,
+            elevation: 8,
+            borderRadius: BorderRadius.circular(16),
+            color: colorScheme.primaryContainer,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              child: Row(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.ios_share, color: Colors.white, size: 22),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Install app: tap Share → Add to Home Screen',
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
-                    ),
+                  Row(
+                    children: [
+                      Icon(Icons.apple, color: colorScheme.onPrimaryContainer, size: 28),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Install Aplikasi di iOS',
+                          style: TextStyle(
+                            color: colorScheme.onPrimaryContainer, 
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => setState(() {
+                          _showIOSGuide = false;
+                          _dismissed = true;
+                        }),
+                        child: Icon(Icons.close, color: colorScheme.onPrimaryContainer),
+                      ),
+                    ],
                   ),
-                  GestureDetector(
-                    onTap: () => setState(() {
-                      _showIOSGuide = false;
-                      _dismissed = true;
-                    }),
-                    child: const Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(Icons.close, color: Colors.white70, size: 20),
-                    ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Tap ikon Share (panah ke atas) di menu bawah browser Anda, lalu pilih "Add to Home Screen" agar bisa diakses seperti profil native.',
+                    style: TextStyle(color: colorScheme.onPrimaryContainer, fontSize: 13),
                   ),
                 ],
               ),

@@ -181,12 +181,73 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
     }
   }
 
+  void _showJemaatDetail(Map<String, dynamic> jemaat) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return AlertDialog(
+          title: Text(
+            jemaat['name'] ?? 'Detail Jemaat',
+            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                _buildDetailRow('Nomor KK', jemaat['nomor_kk']),
+                _buildDetailRow('Email', jemaat['email']),
+                _buildDetailRow('No. Telepon', jemaat['phone_number']),
+                _buildDetailRow('Jenis Kelamin', jemaat['jenis_kelamin'] == 'L' ? 'Laki-laki' : (jemaat['jenis_kelamin'] == 'P' ? 'Perempuan' : '-')),
+                _buildDetailRow('Tempat Lahir', jemaat['tempat_lahir']),
+                _buildDetailRow('Tanggal Lahir', jemaat['tanggal_lahir'] != null ? jemaat['tanggal_lahir'].toString().split(' ').first : '-'),
+                _buildDetailRow('Usia', jemaat['usia']?.toString()),
+                _buildDetailRow('Alamat', jemaat['alamat']),
+                _buildDetailRow('Status', _statusLabel(jemaat['status'])),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Tutup'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(String label, dynamic value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              value?.toString() ?? '-',
+              style: const TextStyle(fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   String _statusLabel(String? status) {
     switch (status) {
       case 'active':
         return 'Aktif';
-      case 'jemaat':
-        return 'Jemaat';
+      case 'inactive':
+        return 'Tidak Aktif';
       case 'simpatisan':
         return 'Simpatisan';
       default:
@@ -258,8 +319,8 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
                             child: Text('Aktif'),
                           ),
                           DropdownMenuItem(
-                            value: 'jemaat',
-                            child: Text('Jemaat'),
+                            value: 'inactive',
+                            child: Text('Tidak Aktif'),
                           ),
                           DropdownMenuItem(
                             value: 'simpatisan',
@@ -379,7 +440,9 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
                           ),
                           trailing: PopupMenuButton<String>(
                             onSelected: (value) {
-                              if (value == 'edit') {
+                              if (value == 'detail') {
+                                _showJemaatDetail(jemaat);
+                              } else if (value == 'edit') {
                                 _editJemaat(jemaat);
                               } else if (value == 'delete') {
                                 _deleteJemaat(
@@ -388,6 +451,16 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
                               }
                             },
                             itemBuilder: (context) => [
+                              const PopupMenuItem(
+                                value: 'detail',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.visibility),
+                                    SizedBox(width: 8),
+                                    Text('Detail'),
+                                  ],
+                                ),
+                              ),
                               const PopupMenuItem(
                                 value: 'edit',
                                 child: Row(

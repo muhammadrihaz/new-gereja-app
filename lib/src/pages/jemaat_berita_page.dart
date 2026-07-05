@@ -304,7 +304,7 @@ class _NewsCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               flex: 5,
@@ -314,12 +314,15 @@ class _NewsCard extends StatelessWidget {
                 borderRadius: BorderRadius.zero,
               ),
             ),
+            // Text Content Footer
             Expanded(
               flex: 4,
-              child: Padding(
+              child: Container(
+                color: theme.colorScheme.surface,
                 padding: const EdgeInsets.all(14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       title,
@@ -346,16 +349,14 @@ class _NewsCard extends StatelessWidget {
                       ],
                     ),
                     if (excerpt.isNotEmpty) ...[
-                      const SizedBox(height: 8),
-                      Expanded(
-                        child: Text(
-                          excerpt,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            height: 1.35,
-                            color: scheme.onSurfaceVariant,
-                          ),
+                      const SizedBox(height: 6),
+                      Text(
+                        excerpt,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          height: 1.35,
+                          color: scheme.onSurfaceVariant,
                         ),
                       ),
                     ],

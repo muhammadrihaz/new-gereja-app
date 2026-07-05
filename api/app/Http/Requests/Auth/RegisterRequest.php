@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
             'tanggal_lahir' => ['nullable', 'date'],
             'alamat' => ['nullable', 'string'],
             'phone_number' => ['nullable', 'string', 'max:20'],
-            'status' => ['nullable', 'in:active,jemaat,simpatisan'],
+            'status' => ['nullable', 'in:active,inactive,simpatisan'],
             'fcm_token' => ['required', 'string', 'min:20'],
         ];
     }

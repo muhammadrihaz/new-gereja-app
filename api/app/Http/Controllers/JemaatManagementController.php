@@ -70,7 +70,7 @@ class JemaatManagementController extends Controller
             'tanggal_lahir' => ['nullable', 'date'],
             'alamat' => ['required', 'string'],
             'phone_number' => ['nullable', 'string', 'max:20'],
-            'status' => ['nullable', 'in:active,jemaat,simpatisan'],
+            'status' => ['nullable', 'in:active,inactive,simpatisan'],
         ], [
             'email.unique' => 'Email sudah terdaftar',
             'username.unique' => 'Username sudah terdaftar',
@@ -140,7 +140,7 @@ class JemaatManagementController extends Controller
             'tanggal_lahir' => ['nullable', 'date'],
             'alamat' => ['required', 'string'],
             'phone_number' => ['nullable', 'string', 'max:20'],
-            'status' => ['nullable', 'in:active,jemaat,simpatisan'],
+            'status' => ['nullable', 'in:active,inactive,simpatisan'],
             'password' => ['nullable', 'string', Password::min(8)],
         ]);
 

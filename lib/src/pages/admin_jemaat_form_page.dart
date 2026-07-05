@@ -359,7 +359,7 @@ class _AdminJemaatFormPageState extends State<AdminJemaatFormPage> {
                 ),
                 items: const [
                   DropdownMenuItem(value: 'active', child: Text('Aktif')),
-                  DropdownMenuItem(value: 'jemaat', child: Text('Jemaat')),
+                  DropdownMenuItem(value: 'inactive', child: Text('Tidak Aktif')),
                   DropdownMenuItem(
                     value: 'simpatisan',
                     child: Text('Simpatisan'),
