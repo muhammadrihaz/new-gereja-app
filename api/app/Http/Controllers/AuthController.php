@@ -31,12 +31,14 @@ class AuthController extends Controller
         $isHeadOfFamily = $registeredKk !== null
             && self::normalizeName((string) $registeredKk->nama_kepala_keluarga) === $normalizedName;
 
-        $isRegisteredMember = User::query()
+        $existingUser = User::query()
             ->where('nomor_kk', $nomorKk)
-            ->get(['name'])
-            ->contains(function (User $member) use ($normalizedName): bool {
+            ->get()
+            ->first(function (User $member) use ($normalizedName) {
                 return self::normalizeName((string) $member->name) === $normalizedName;
             });
+
+        $isRegisteredMember = $existingUser !== null;
 
         if (! $isHeadOfFamily && ! $isRegisteredMember) {
             return $this->errorResponse(
@@ -46,19 +48,30 @@ class AuthController extends Controller
             );
         }
 
-        $user = User::query()->create([
-            'name' => $name,
-            'username' => $request->string('username')->toString(),
-            'email' => $request->string('email')->toString() ?: $request->string('username')->toString() . '@placeholder.local',
-            'password' => $request->string('password')->toString(),
-            'nomor_kk' => $nomorKk,
-            'jenis_kelamin' => $request->string('jenis_kelamin')->toString() ?: null,
-            'usia' => $request->integer('usia') ?: null,
-            'alamat' => $request->string('alamat')->toString() ?: null,
-            'phone_number' => $request->string('phone_number')->toString() ?: null,
-            'status' => $request->string('status')->toString() ?: 'active',
-            'role' => 'jemaat',
-        ]);
+        $email = $request->string('email')->toString() ?: $request->string('username')->toString() . '@placeholder.local';
+
+        if ($existingUser) {
+            $existingUser->update([
+                'username' => $request->string('username')->toString(),
+                'email' => $email,
+                'password' => $request->string('password')->toString(),
+            ]);
+            $user = $existingUser;
+        } else {
+            $user = User::query()->create([
+                'name' => $name,
+                'username' => $request->string('username')->toString(),
+                'email' => $email,
+                'password' => $request->string('password')->toString(),
+                'nomor_kk' => $nomorKk,
+                'jenis_kelamin' => $request->string('jenis_kelamin')->toString() ?: null,
+                'usia' => $request->integer('usia') ?: null,
+                'alamat' => $request->string('alamat')->toString() ?: ($registeredKk->alamat ?? null),
+                'phone_number' => $request->string('phone_number')->toString() ?: ($registeredKk->phone_number ?? null),
+                'status' => $request->string('status')->toString() ?: 'active',
+                'role' => 'jemaat',
+            ]);
+        }
 
         UserDevice::query()->updateOrCreate(
             ['fcm_token' => $request->string('fcm_token')->toString()],

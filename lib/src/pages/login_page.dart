@@ -182,6 +182,7 @@ class _LoginPageState extends State<LoginPage> {
         username: _regUsernameController.text.trim(),
         password: _regPasswordController.text,
         nomorKk: _verifKkController.text.trim(),
+        name: _verifNameController.text.trim(),
       );
     } on ApiError catch (e) {
       setState(() {

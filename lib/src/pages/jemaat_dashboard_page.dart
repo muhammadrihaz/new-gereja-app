@@ -820,11 +820,13 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              Text((_gereja['address'] as String?) ?? 'Bali, Indonesia'),
-              if ((_gereja['phone'] as String?)?.isNotEmpty == true)
-                Text('Telp: ${_gereja['phone']}'),
-              if ((_gereja['email'] as String?)?.isNotEmpty == true)
-                Text('Email: ${_gereja['email']}'),
+              Text((_gereja['address'] as String?) ?? 'Jalan Sunset Road'),
+              Text(
+                'Telp: ${((_gereja['phone'] as String?)?.isNotEmpty == true) ? _gereja['phone'] : '082145238942'}',
+              ),
+              Text(
+                'Email: ${((_gereja['email'] as String?)?.isNotEmpty == true) ? _gereja['email'] : 'yehudachurch14@gmail.com'}',
+              ),
               const SizedBox(height: 8),
               _sosialMediaSection(),
             ],

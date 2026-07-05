@@ -23,7 +23,7 @@ class RegisterRequest extends FormRequest
             'usia' => ['nullable', 'integer', 'min:1', 'max:120'],
             'tempat_lahir' => ['nullable', 'string', 'max:100'],
             'tanggal_lahir' => ['nullable', 'date'],
-            'alamat' => ['required', 'string'],
+            'alamat' => ['nullable', 'string'],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'status' => ['nullable', 'in:active,jemaat,simpatisan'],
             'fcm_token' => ['required', 'string', 'min:20'],
