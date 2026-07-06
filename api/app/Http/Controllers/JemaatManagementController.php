@@ -21,7 +21,7 @@ class JemaatManagementController extends Controller
 
         $query = User::query()
             ->where('role', 'jemaat')
-            ->select(['id', 'name', 'username', 'email', 'nomor_kk', 'jenis_kelamin', 'usia', 'alamat', 'phone_number', 'status', 'profile_photo_path', 'created_at']);
+            ->select(['id', 'name', 'username', 'email', 'nomor_kk', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'usia', 'alamat', 'phone_number', 'status', 'profile_photo_path', 'created_at']);
 
         if ($search !== '') {
             $query->where(function ($q) use ($search): void {

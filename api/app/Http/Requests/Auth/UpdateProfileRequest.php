@@ -27,7 +27,7 @@ class UpdateProfileRequest extends FormRequest
             'tanggal_lahir' => ['nullable', 'date'],
             'alamat' => ['required', 'string'],
             'phone_number' => ['nullable', 'string', 'max:20'],
-            'status' => ['nullable', 'in:active,jemaat,simpatisan'],
+            'status' => ['nullable', 'in:active,inactive,simpatisan'],
         ];
     }
 

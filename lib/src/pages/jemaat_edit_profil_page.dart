@@ -26,8 +26,11 @@ class _JemaatEditProfilPageState extends State<JemaatEditProfilPage> {
   final _alamatController = TextEditingController();
   final _usiaController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _tempatLahirController = TextEditingController();
 
   String _jenisKelamin = 'L';
+  String _status = 'active';
+  DateTime? _tanggalLahir;
   String? _fotoProfilUrl;
   List<Map<String, dynamic>> _anggotaKeluarga = <Map<String, dynamic>>[];
   XFile? _selectedFotoFile;
@@ -56,6 +59,7 @@ class _JemaatEditProfilPageState extends State<JemaatEditProfilPage> {
     _alamatController.dispose();
     _usiaController.dispose();
     _phoneController.dispose();
+    _tempatLahirController.dispose();
     super.dispose();
   }
 
@@ -80,7 +84,13 @@ class _JemaatEditProfilPageState extends State<JemaatEditProfilPage> {
       _alamatController.text = (me['alamat'] as String?) ?? '';
       _usiaController.text = ((me['usia'] as num?)?.toInt().toString()) ?? '';
       _phoneController.text = (me['phone_number'] as String?) ?? '';
+      _tempatLahirController.text = (me['tempat_lahir'] as String?) ?? '';
+      final tglLahirStr = me['tanggal_lahir'] as String?;
+      if (tglLahirStr != null) {
+        _tanggalLahir = DateTime.tryParse(tglLahirStr);
+      }
       _jenisKelamin = (me['jenis_kelamin'] as String?) ?? 'L';
+      _status = (me['status'] as String?) ?? 'active';
       _fotoProfilUrl = me['profile_photo_url'] as String?;
     } on ApiError catch (error) {
       _error =
@@ -168,8 +178,11 @@ class _JemaatEditProfilPageState extends State<JemaatEditProfilPage> {
         'email': _emailController.text.trim(),
         'phone_number': _phoneController.text.trim(),
         'jenis_kelamin': _jenisKelamin,
+        'tempat_lahir': _tempatLahirController.text.trim(),
+        'tanggal_lahir': _tanggalLahir?.toIso8601String().split('T').first,
         'alamat': _alamatController.text.trim(),
         'usia': usia,
+        'status': _status,
         if (_passwordController.text.isNotEmpty) ...{
           'password': _passwordController.text,
           'password_confirmation': _passwordController.text,
@@ -353,6 +366,41 @@ class _JemaatEditProfilPageState extends State<JemaatEditProfilPage> {
             ),
             const SizedBox(height: 14),
             TextFormField(
+              controller: _tempatLahirController,
+              decoration: const InputDecoration(
+                labelText: 'Tempat Lahir',
+                prefixIcon: Icon(Icons.location_city_outlined),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      final now = DateTime.now();
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: _tanggalLahir ?? DateTime(now.year - 20),
+                        firstDate: DateTime(now.year - 100),
+                        lastDate: now,
+                      );
+                      if (picked != null) {
+                        setState(() => _tanggalLahir = picked);
+                      }
+                    },
+                    icon: const Icon(Icons.calendar_month_outlined),
+                    label: Text(
+                      _tanggalLahir == null
+                          ? 'Pilih Tanggal Lahir'
+                          : _tanggalLahir!.toIso8601String().split('T').first,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            TextFormField(
               controller: _usiaController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
@@ -377,6 +425,27 @@ class _JemaatEditProfilPageState extends State<JemaatEditProfilPage> {
                 prefixIcon: Icon(Icons.location_on_outlined),
                 alignLabelWithHint: true,
               ),
+            ),
+            const SizedBox(height: 14),
+            DropdownButtonFormField<String>(
+              initialValue: _status,
+              decoration: const InputDecoration(
+                labelText: 'Status',
+                prefixIcon: Icon(Icons.person_outline),
+              ),
+              items: const [
+                DropdownMenuItem(value: 'active', child: Text('Aktif')),
+                DropdownMenuItem(value: 'inactive', child: Text('Tidak Aktif')),
+                DropdownMenuItem(
+                  value: 'simpatisan',
+                  child: Text('Simpatisan'),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _status = value ?? 'active';
+                });
+              },
             ),
             const SizedBox(height: 24),
             if (_anggotaKeluarga.isNotEmpty) ...[

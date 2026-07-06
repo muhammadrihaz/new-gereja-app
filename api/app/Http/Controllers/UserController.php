@@ -17,7 +17,7 @@ class UserController extends Controller
         $search = trim((string) $request->query('search', ''));
         $perPage = min((int) $request->query('per_page', 30), 100);
 
-        $query = User::query()->select(['id', 'name', 'username', 'email', 'phone_number', 'role', 'nomor_kk', 'status']);
+        $query = User::query()->select(['id', 'name', 'username', 'email', 'phone_number', 'role', 'nomor_kk', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'usia', 'alamat', 'status']);
 
         if (is_string($role) && $role !== '') {
             $query->where('role', $role);
@@ -82,7 +82,7 @@ class UserController extends Controller
 
         $membersByKk = (clone $baseQuery)
             ->whereIn('nomor_kk', $kkNumbers)
-            ->select(['id', 'name', 'username', 'email', 'phone_number', 'nomor_kk', 'status'])
+            ->select(['id', 'name', 'username', 'email', 'phone_number', 'nomor_kk', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'usia', 'alamat', 'status'])
             ->orderBy('name')
             ->get()
             ->groupBy('nomor_kk');
@@ -124,7 +124,7 @@ class UserController extends Controller
         $members = User::query()
             ->where('nomor_kk', $user->nomor_kk)
             ->where('role', 'jemaat')
-            ->select(['id', 'name', 'username', 'email', 'nomor_kk', 'jenis_kelamin', 'usia', 'alamat', 'phone_number', 'status', 'profile_photo_path'])
+            ->select(['id', 'name', 'username', 'email', 'nomor_kk', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'usia', 'alamat', 'phone_number', 'status', 'profile_photo_path'])
             ->orderBy('name')
             ->get()
             ->map(function (User $member) {

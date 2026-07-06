@@ -152,6 +152,8 @@ class AuthController extends Controller
             'email' => $request->string('email')->toString() ?: $user->email,
             'nomor_kk' => $request->string('nomor_kk')->toString() ?: $user->nomor_kk,
             'jenis_kelamin' => $request->string('jenis_kelamin')->toString() ?: $user->jenis_kelamin,
+            'tempat_lahir' => $request->string('tempat_lahir')->toString() ?: $user->tempat_lahir,
+            'tanggal_lahir' => $request->string('tanggal_lahir')->toString() ?: $user->tanggal_lahir,
             'usia' => $request->integer('usia') ?: $user->usia,
             'alamat' => $request->string('alamat')->toString() ?: $user->alamat,
             'phone_number' => $request->string('phone_number')->toString() ?: $user->phone_number,
