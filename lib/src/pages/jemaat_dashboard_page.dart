@@ -694,15 +694,9 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
         },
         destinations: [
         ...[
-          NavigationDestination(
-            icon: _BadgeIcon(
-              controller: widget.notificationBadge,
-              child: const Icon(Icons.home_outlined),
-            ),
-            selectedIcon: _BadgeIcon(
-              controller: widget.notificationBadge,
-              child: const Icon(Icons.home),
-            ),
+          const NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
             label: 'Beranda',
           ),
           const NavigationDestination(

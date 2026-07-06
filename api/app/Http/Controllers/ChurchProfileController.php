@@ -14,18 +14,14 @@ class ChurchProfileController extends Controller
 
     public function show(): JsonResponse
     {
-        $profile = Cache::remember('church_profile', 600, function () {
-            $profile = ChurchProfile::query()->first();
+        $profile = ChurchProfile::query()->first();
 
-            if (! $profile) {
-                $profile = ChurchProfile::query()->create([
-                    'name' => config('app.name', 'Profil Gereja'),
-                    'logo' => null,
-                ]);
-            }
-
-            return $profile;
-        });
+        if (! $profile) {
+            $profile = ChurchProfile::query()->create([
+                'name' => config('app.name', 'Profil Gereja'),
+                'logo' => null,
+            ]);
+        }
 
         return $this->successResponse($profile, 'Profil gereja berhasil diambil');
     }
@@ -39,8 +35,6 @@ class ChurchProfileController extends Controller
         } else {
             $profile = ChurchProfile::query()->create($request->validated());
         }
-
-        Cache::forget('church_profile');
 
         return $this->successResponse($profile->toArray(), 'Profil gereja berhasil disimpan');
     }
