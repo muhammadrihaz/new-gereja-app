@@ -106,6 +106,25 @@ class ApiClient {
     return headers;
   }
 
+  dynamic _sanitizeUrls(dynamic data) {
+    if (data is String) {
+      if (data.startsWith('http://localhost') || data.startsWith('http://116.212.73.88')) {
+        return data.replaceAll(
+          RegExp(r'http://(localhost|116\.212\.73\.88)(:\d+)?'),
+          'https://gpiyehuda-bali.my.id',
+        );
+      }
+      return data;
+    }
+    if (data is List) {
+      return data.map((e) => _sanitizeUrls(e)).toList();
+    }
+    if (data is Map<String, dynamic>) {
+      return data.map((key, value) => MapEntry(key, _sanitizeUrls(value)));
+    }
+    return data;
+  }
+
   Future<dynamic> _decode(http.Response response) async {
     dynamic body = <String, dynamic>{};
     if (response.body.isNotEmpty) {
@@ -117,9 +136,9 @@ class ApiClient {
     }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return body;
+      return _sanitizeUrls(body);
     }
-
+    
     final mapBody = body is Map<String, dynamic> ? body : <String, dynamic>{};
 
     // Parse Laravel-style validation errors: { errors: { field: [msg, ...] } }
