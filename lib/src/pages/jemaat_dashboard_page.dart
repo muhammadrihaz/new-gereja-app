@@ -1497,29 +1497,4 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
 }
 
 
-/// Wraps any icon widget with a Material 3 [Badge] whose label reflects the
-/// unread notification count. When [controller] is null the child is returned
-/// unchanged so the widget is safe to use before the controller is wired.
-class _BadgeIcon extends StatelessWidget {
-  const _BadgeIcon({required this.controller, required this.child});
 
-  final NotificationBadgeController? controller;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = controller;
-    if (c == null) return child;
-    return AnimatedBuilder(
-      animation: c,
-      builder: (context, _) {
-        if (c.count <= 0) return child;
-        final label = c.count > 99 ? '99+' : '${c.count}';
-        return Badge(
-          label: Text(label),
-          child: child,
-        );
-      },
-    );
-  }
-}
