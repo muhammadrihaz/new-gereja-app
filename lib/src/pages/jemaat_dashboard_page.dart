@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../core/app_colors.dart';
 import '../core/api_client.dart';
@@ -970,7 +971,7 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: ActionChip(
-                  avatar: Icon(_sosialIcon(p['key']!), size: 18),
+                  avatar: _sosialIcon(p['key']!),
                   label: Text(p['label']!, style: const TextStyle(fontSize: 12)),
                   onPressed: () => _openSosialLink(p['key']!, p['value']!),
                   visualDensity: VisualDensity.compact,
@@ -983,18 +984,18 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
     );
   }
 
-  IconData _sosialIcon(String key) {
+  Widget _sosialIcon(String key) {
     switch (key) {
       case 'instagram':
-        return Icons.camera_alt_outlined;
+        return const FaIcon(FontAwesomeIcons.instagram, size: 18);
       case 'tiktok':
-        return Icons.music_note_outlined;
+        return const FaIcon(FontAwesomeIcons.tiktok, size: 18);
       case 'youtube':
-        return Icons.play_circle_outline;
+        return const FaIcon(FontAwesomeIcons.youtube, size: 18);
       case 'facebook':
-        return Icons.facebook_outlined;
+        return const FaIcon(FontAwesomeIcons.facebook, size: 18);
       default:
-        return Icons.link;
+        return const Icon(Icons.link, size: 18);
     }
   }
 

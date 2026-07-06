@@ -2039,20 +2039,27 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                     child: Text('Belum ada pengajuan layanan'),
                   )
                 else
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columnSpacing: 12,
-                      columns: const [
-                        DataColumn(label: Text('ID'), tooltip: 'ID Pengajuan'),
-                        DataColumn(label: Text('Pemohon')),
-                        DataColumn(label: Text('No KK')),
-                        DataColumn(label: Text('Kategori')),
-                        DataColumn(label: Text('Status')),
-                        DataColumn(label: Text('Aksi')),
-                      ],
-                      rows: _buildPengajuanTableRows(),
-                    ),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                          child: DataTable(
+                            columnSpacing: 12,
+                            columns: const [
+                              DataColumn(label: Text('ID'), tooltip: 'ID Pengajuan'),
+                              DataColumn(label: Text('Pemohon')),
+                              DataColumn(label: Text('No KK')),
+                              DataColumn(label: Text('Kategori')),
+                              DataColumn(label: Text('Status')),
+                              DataColumn(label: Text('Aksi')),
+                            ],
+                            rows: _buildPengajuanTableRows(),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 const SizedBox(height: 12),
                 // Pagination

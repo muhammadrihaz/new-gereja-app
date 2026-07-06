@@ -181,11 +181,32 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
     }
   }
 
+  String _formatDateToDMY(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return '-';
+    final parsed = DateTime.tryParse(dateStr);
+    if (parsed == null) return dateStr;
+    return '${parsed.day.toString().padLeft(2, '0')}/${parsed.month.toString().padLeft(2, '0')}/${parsed.year}';
+  }
+
   void _showJemaatDetail(Map<String, dynamic> jemaat) {
     showDialog(
       context: context,
       builder: (context) {
         final theme = Theme.of(context);
+        
+        String usiaLabel = jemaat['usia']?.toString() ?? '-';
+        if (jemaat['tanggal_lahir'] != null) {
+          final tglLahir = DateTime.tryParse(jemaat['tanggal_lahir'].toString());
+          if (tglLahir != null) {
+            final today = DateTime.now();
+            int age = today.year - tglLahir.year;
+            if (today.month < tglLahir.month || (today.month == tglLahir.month && today.day < tglLahir.day)) {
+              age--;
+            }
+            usiaLabel = '$age Tahun';
+          }
+        }
+
         return AlertDialog(
           title: Text(
             jemaat['name'] ?? 'Detail Jemaat',
@@ -199,8 +220,8 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
                 _buildDetailRow('No. Telepon', jemaat['phone_number']),
                 _buildDetailRow('Jenis Kelamin', jemaat['jenis_kelamin'] == 'L' ? 'Laki-laki' : (jemaat['jenis_kelamin'] == 'P' ? 'Perempuan' : '-')),
                 _buildDetailRow('Tempat Lahir', jemaat['tempat_lahir']),
-                _buildDetailRow('Tanggal Lahir', jemaat['tanggal_lahir'] != null ? jemaat['tanggal_lahir'].toString().split(' ').first : '-'),
-                _buildDetailRow('Usia', jemaat['usia']?.toString()),
+                _buildDetailRow('Tanggal Lahir', _formatDateToDMY(jemaat['tanggal_lahir']?.toString())),
+                _buildDetailRow('Usia', usiaLabel),
                 _buildDetailRow('Alamat', jemaat['alamat']),
                 _buildDetailRow('Status', _statusLabel(jemaat['status'])),
               ],
@@ -262,18 +283,6 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manajemen Jemaat'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Tooltip(
-              message: 'Tambah Jemaat',
-              child: IconButton(
-                icon: const Icon(Icons.person_add),
-                onPressed: _showAddJemaatDialog,
-              ),
-            ),
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddJemaatDialog,
