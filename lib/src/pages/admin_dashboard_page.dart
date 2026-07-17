@@ -674,7 +674,10 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             return;
           }
           if (value != null) {
-            formData[key] = _formatDateOnly(value);
+            final y = value.year.toString().padLeft(4, '0');
+            final m = value.month.toString().padLeft(2, '0');
+            final d = value.day.toString().padLeft(2, '0');
+            formData[key] = '$y-$m-$d';
           }
           continue;
         }
@@ -3504,7 +3507,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       label: Text(
                         _tanggalTerbitBerita == null
                             ? 'Pilih Tanggal Terbit'
-                            : _formatDateOnly(_tanggalTerbitBerita!),
+                            : _formatDateUI(_tanggalTerbitBerita!),
                       ),
                     ),
                   ],
@@ -3891,12 +3894,17 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
   String _formatDateTime(DateTime value) {
     String two(int x) => x.toString().padLeft(2, '0');
-    return '${value.year}-${two(value.month)}-${two(value.day)} ${two(value.hour)}:${two(value.minute)}';
+    return '${two(value.day)}-${two(value.month)}-${value.year.toString().substring(2, 4)} ${two(value.hour)}:${two(value.minute)}';
   }
 
   String _formatDateOnly(DateTime value) {
     String two(int x) => x.toString().padLeft(2, '0');
-    return '${value.year}-${two(value.month)}-${two(value.day)}';
+    return '${value.year.toString().padLeft(4, '0')}-${two(value.month)}-${two(value.day)}';
+  }
+
+  String _formatDateUI(DateTime value) {
+    String two(int x) => x.toString().padLeft(2, '0');
+    return '${two(value.day)}-${two(value.month)}-${value.year.toString().substring(2, 4)}';
   }
 
   Color _statusBackgroundColor(String status, AppColors appColors) {

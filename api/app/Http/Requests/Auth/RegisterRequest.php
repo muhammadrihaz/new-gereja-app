@@ -34,7 +34,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama lengkap wajib diisi',
-            'nomor_kk.exists' => 'Nomor KK atau nama lengkap tidak terdaftar, periksa ulang apakah sudah benar',
+            'nomor_kk.exists' => 'Nomor KK atau Nama Lengkap belum terdaftar sebagai Jemaat. Mohon datang ke Gereja untuk mendaftar sebagai Jemaat., periksa ulang apakah sudah benar',
         ];
     }
 }

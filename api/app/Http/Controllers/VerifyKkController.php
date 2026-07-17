@@ -40,7 +40,7 @@ class VerifyKkController extends Controller
 
         if (! $isHeadOfFamily && ! $isRegisteredMember) {
             return $this->errorResponse(
-                'Nomor KK atau nama lengkap tidak terdaftar',
+                'Nomor KK atau Nama Lengkap belum terdaftar sebagai Jemaat. Mohon datang ke Gereja untuk mendaftar sebagai Jemaat.',
                 'KK_OR_NAME_NOT_REGISTERED',
                 422,
             );

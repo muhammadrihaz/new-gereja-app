@@ -42,7 +42,7 @@ class AuthController extends Controller
 
         if (! $isHeadOfFamily && ! $isRegisteredMember) {
             return $this->errorResponse(
-                'Nomor KK atau nama lengkap tidak terdaftar, periksa ulang apakah sudah benar',
+                'Nomor KK atau Nama Lengkap belum terdaftar sebagai Jemaat. Mohon datang ke Gereja untuk mendaftar sebagai Jemaat., periksa ulang apakah sudah benar',
                 'KK_OR_NAME_NOT_REGISTERED',
                 422
             );

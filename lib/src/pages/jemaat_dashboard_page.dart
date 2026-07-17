@@ -1548,7 +1548,13 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
   }
 
   String _formatDateOnly(DateTime value) {
-    return formatDateLabel(value);
+    String two(int x) => x.toString().padLeft(2, '0');
+    return '${value.year.toString().padLeft(4, '0')}-${two(value.month)}-${two(value.day)}';
+  }
+
+  String _formatDateUI(DateTime value) {
+    String two(int x) => x.toString().padLeft(2, '0');
+    return '${two(value.day)}-${two(value.month)}-${value.year.toString().substring(2, 4)}';
   }
 
   Color _statusBackgroundColor(String status, AppColors appColors) {

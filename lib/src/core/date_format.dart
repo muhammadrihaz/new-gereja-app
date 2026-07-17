@@ -1,26 +1,24 @@
 import 'package:intl/intl.dart';
 
 /// Format tanggal untuk UI aplikasi GPI Yehuda.
-/// Default: EEEE, d MMMM y (contoh: Senin, 6 Juli 2026) dalam aksara Indonesia
-/// Use [useLong] untuk format timestamp YYYY-MM-DD HH:mm:ss GMT+8.
+/// Default: dd-MM-yy (contoh: 06-07-26)
+/// Use [useLong] untuk format timestamp dd-MM-yy HH:mm.
 String formatTanggal(DateTime? date, {bool includeTime = false, bool useLong = false}) {
   if (date == null) return '-';
   if (useLong) {
     return formatTimestampLong(date);
   }
-  final datePart = DateFormat('EEEE, d MMMM y', 'id_ID').format(date);
+  final datePart = DateFormat('dd-MM-yy').format(date);
   if (!includeTime) return datePart;
   final timePart = DateFormat('HH:mm').format(date);
   return '$datePart $timePart';
 }
 
-/// Format YYYY-MM-DD HH:mm:ss
+/// Format dd-MM-yy HH:mm
 String formatTimestampLong(DateTime date) {
   String two(int x) => x.toString().padLeft(2, '0');
-  final tanggal =
-      '${date.year.toString().padLeft(4, '0')}-${two(date.month)}-${two(date.day)}';
-  final jam =
-      '${two(date.hour)}:${two(date.minute)}:${two(date.second)}';
+  final tanggal = DateFormat('dd-MM-yy').format(date);
+  final jam = '${two(date.hour)}:${two(date.minute)}';
   return '$tanggal $jam';
 }
 
