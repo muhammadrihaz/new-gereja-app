@@ -16,6 +16,8 @@ class UpdateServiceStatusRequest extends FormRequest
         return [
             'status' => ['required', 'in:approved,rejected,pending'],
             'admin_note' => ['nullable', 'string'],
+            'service_date' => ['nullable', 'date'],
+            'service_time' => ['nullable', 'date_format:H:i'],
         ];
     }
 }

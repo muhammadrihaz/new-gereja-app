@@ -299,6 +299,8 @@ class ServiceController extends Controller
         $application->update([
             'status' => $request->string('status')->toString(),
             'admin_note' => $request->string('admin_note')->toString() ?: null,
+            'service_date' => $request->input('service_date'),
+            'service_time' => $request->input('service_time'),
         ]);
 
         $actorId = auth('sanctum')->id();

@@ -18,6 +18,8 @@ class ServiceApplication extends Model
         'attachments',
         'status',
         'admin_note',
+        'service_date',
+        'service_time',
     ];
 
     protected function casts(): array

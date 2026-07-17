@@ -1219,6 +1219,7 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
 
             return Card(
               child: ListTile(
+                onTap: () => _lihatDetailPengajuan(item),
                 leading: const Icon(Icons.description_outlined),
                 title: Text(category),
                 subtitle: Text('Status: $status • Tanggal: $createdAtLabel'),
@@ -1231,6 +1232,77 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
             );
           }),
       ],
+    );
+  }
+
+  void _lihatDetailPengajuan(Map<String, dynamic> item) {
+    final status = item['status']?.toString() ?? '-';
+    final category = item['category']?.toString() ?? '-';
+    final serviceDate = item['service_date']?.toString();
+    final serviceTime = item['service_time']?.toString();
+    final adminNote = item['admin_note']?.toString();
+    final appColors = Theme.of(context).extension<AppColors>();
+    
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Detail Pengajuan'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.info_outline),
+                  title: const Text('Status'),
+                  subtitle: Text(
+                    status.toUpperCase(), 
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, 
+                      color: appColors != null ? _statusTextColor(status, appColors) : Colors.grey,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.category_outlined),
+                  title: const Text('Kategori'),
+                  subtitle: Text(category),
+                ),
+                if (status == 'approved') ...[
+                  const Divider(),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.calendar_today),
+                    title: const Text('Tanggal Pelayanan'),
+                    subtitle: Text(serviceDate ?? '-'),
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.access_time),
+                    title: const Text('Jam Pelayanan'),
+                    subtitle: Text(serviceTime ?? '-'),
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.note_alt_outlined),
+                    title: const Text('Keterangan dari Admin'),
+                    subtitle: Text(adminNote == null || adminNote.isEmpty ? '-' : adminNote),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Tutup'),
+            ),
+          ],
+        );
+      },
     );
   }
 

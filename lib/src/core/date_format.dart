@@ -11,17 +11,17 @@ String formatTanggal(DateTime? date, {bool includeTime = false, bool useLong = f
   final datePart = DateFormat('EEEE, d MMMM y', 'id_ID').format(date);
   if (!includeTime) return datePart;
   final timePart = DateFormat('HH:mm').format(date);
-  return '$datePart $timePart WITA';
+  return '$datePart $timePart';
 }
 
-/// Format YYYY-MM-DD HH:mm:ss GMT+8 (WITA).
+/// Format YYYY-MM-DD HH:mm:ss
 String formatTimestampLong(DateTime date) {
   String two(int x) => x.toString().padLeft(2, '0');
   final tanggal =
       '${date.year.toString().padLeft(4, '0')}-${two(date.month)}-${two(date.day)}';
   final jam =
       '${two(date.hour)}:${two(date.minute)}:${two(date.second)}';
-  return '$tanggal $jam GMT+8';
+  return '$tanggal $jam';
 }
 
 /// Parse string ISO8601 ke DateTime lalu format ke EEEE, d MMMM y

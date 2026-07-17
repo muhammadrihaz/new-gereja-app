@@ -121,13 +121,34 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text,
       );
     } on ApiError catch (error) {
+      final errMsg = error.message.toLowerCase().contains('kredensial') || error.message.toLowerCase().contains('unauthorized') 
+          ? 'Email atau password Anda salah!' 
+          : error.message;
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errMsg),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+      
       setState(() {
-        _error =
-            '${error.message}${error.traceId != null ? ' (trace: ${error.traceId})' : ''}';
+        _error = errMsg;
       });
     } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Email atau password Anda salah!'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+      
       setState(() {
-        _error = 'Login gagal. Silakan coba lagi.';
+        _error = 'Email atau password Anda salah!';
       });
     }
   }
@@ -537,6 +558,22 @@ class _LoginPageState extends State<LoginPage> {
                                         return null;
                                       },
                                     ),
+                                    if (_error != null) ...[
+                                      const SizedBox(height: 12),
+                                      Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.errorContainer,
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Text(
+                                          _error!,
+                                          style: TextStyle(
+                                            color: theme.colorScheme.onErrorContainer,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ],
                                 ),
                               )

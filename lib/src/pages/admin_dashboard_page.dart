@@ -815,7 +815,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     );
   }
 
-  Future<void> _updateStatusPengajuan(int id, String status) async {
+  Future<void> _updateStatusPengajuan(int id, String status, {String? adminNote, String? serviceDate, String? serviceTime}) async {
     try {
       final token = widget.session.token;
       if (token == null || token.isEmpty) {
@@ -826,7 +826,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         token: token,
         applicationId: id,
         status: status,
-        adminNote: 'Diperbarui dari dashboard admin',
+        adminNote: adminNote ?? 'Diperbarui dari dashboard admin',
+        serviceDate: serviceDate,
+        serviceTime: serviceTime,
       );
 
       _snack('Status pengajuan berhasil diperbarui');
@@ -834,6 +836,97 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     } on ApiError catch (error) {
       _snack(error.message);
     }
+  }
+
+  Future<void> _showApprovalForm(Map<String, dynamic> item) async {
+    final id = (item['id'] as num?)?.toInt() ?? 0;
+    
+    DateTime selectedDate = DateTime.now();
+    TimeOfDay selectedTime = TimeOfDay.now();
+    final noteController = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateBuilder) {
+            return AlertDialog(
+              title: const Text('Setujui Pengajuan Layanan'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Tanggal Pelayanan'),
+                      subtitle: Text(selectedDate.toString().split(' ').first),
+                      trailing: const Icon(Icons.calendar_today),
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setStateBuilder(() => selectedDate = date);
+                        }
+                      },
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Jam Pelayanan'),
+                      subtitle: Text(selectedTime.format(context)),
+                      trailing: const Icon(Icons.access_time),
+                      onTap: () async {
+                        final time = await showTimePicker(
+                          context: context,
+                          initialTime: selectedTime,
+                        );
+                        if (time != null) {
+                          setStateBuilder(() => selectedTime = time);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: noteController,
+                      decoration: const InputDecoration(
+                        labelText: 'Keterangan (Opsional)',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Batal'),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    final dateStr = selectedDate.toIso8601String().split('T').first;
+                    final timeStr = '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
+                    
+                    _updateStatusPengajuan(
+                      id, 
+                      'approved', 
+                      adminNote: noteController.text, 
+                      serviceDate: dateStr, 
+                      serviceTime: timeStr,
+                    );
+                  },
+                  child: const Text('Simpan'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _kirimBroadcast() async {
@@ -2153,7 +2246,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                 if (status == 'pending')
                   IconButton(
                     icon: const Icon(Icons.check),
-                    onPressed: () => _updateStatusPengajuan(id, 'approved'),
+                    onPressed: () => _showApprovalForm(item),
                     tooltip: 'Setujui',
                   ),
                 if (status == 'pending')

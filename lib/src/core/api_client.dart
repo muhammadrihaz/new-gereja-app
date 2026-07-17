@@ -751,11 +751,18 @@ class ApiClient {
     required int applicationId,
     required String status,
     String? adminNote,
+    String? serviceDate,
+    String? serviceTime,
   }) async {
+    final body = <String, dynamic>{'status': status};
+    if (adminNote != null) body['admin_note'] = adminNote;
+    if (serviceDate != null) body['service_date'] = serviceDate;
+    if (serviceTime != null) body['service_time'] = serviceTime;
+    
     final response = await http.patch(
       _uri('/services/applications/$applicationId/status'),
       headers: _headers(token: token),
-      body: jsonEncode({'status': status, 'admin_note': adminNote}),
+      body: jsonEncode(body),
     );
     final payload = await _decode(response) as Map<String, dynamic>;
     return payload['data'] as Map<String, dynamic>? ?? <String, dynamic>{};
