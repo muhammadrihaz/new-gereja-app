@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\EventController;
@@ -21,6 +22,8 @@ Route::prefix('v1')->group(function (): void {
 
     Route::post('/auth/register', [AuthController::class, 'register'])->middleware('throttle:auth-register');
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:auth-login');
+    Route::post('/forgot-password/verify', [ForgotPasswordController::class, 'verify'])->middleware('throttle:auth-login');
+    Route::post('/forgot-password/reset', [ForgotPasswordController::class, 'reset'])->middleware('throttle:auth-login');
     Route::post('/auth/google-signin', [\App\Http\Controllers\GoogleAuthController::class, 'signIn'])->middleware('throttle:auth-login');
     Route::post('/auth/verify-kk', VerifyKkController::class)->middleware('throttle:auth-login');
     Route::get('/church/profile', [ChurchProfileController::class, 'show']);

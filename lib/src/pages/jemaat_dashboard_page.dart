@@ -904,21 +904,29 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
                       useLong: true,
                     );
                     return ListTile(
+                      onTap: () => _lihatDetailPengajuan(item),
                       dense: true,
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.description_outlined),
                       title: Text(category),
                       subtitle: Text('Dibuat: $tanggalLabel'),
-                      trailing: Chip(
-                        label: Text(status),
-                        backgroundColor: _statusBackgroundColor(
-                          status,
-                          appColors,
-                        ),
-                        labelStyle: TextStyle(
-                          color: _statusTextColor(status, appColors),
-                          fontWeight: FontWeight.w600,
-                        ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Chip(
+                            label: Text(status),
+                            backgroundColor: _statusBackgroundColor(
+                              status,
+                              appColors,
+                            ),
+                            labelStyle: TextStyle(
+                              color: _statusTextColor(status, appColors),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.visibility_outlined, size: 20, color: Colors.grey),
+                        ],
                       ),
                     );
                   }),
@@ -1223,10 +1231,20 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
                 leading: const Icon(Icons.description_outlined),
                 title: Text(category),
                 subtitle: Text('Status: $status • Tanggal: $createdAtLabel'),
-                trailing: TextButton.icon(
-                  onPressed: () => _downloadSertifikat(item),
-                  icon: const Icon(Icons.picture_as_pdf_outlined),
-                  label: const Text('PDF'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      tooltip: 'Lihat Detail',
+                      icon: const Icon(Icons.visibility_outlined, color: Colors.grey),
+                      onPressed: () => _lihatDetailPengajuan(item),
+                    ),
+                    TextButton.icon(
+                      onPressed: () => _downloadSertifikat(item),
+                      icon: const Icon(Icons.picture_as_pdf_outlined),
+                      label: const Text('PDF'),
+                    ),
+                  ],
                 ),
               ),
             );

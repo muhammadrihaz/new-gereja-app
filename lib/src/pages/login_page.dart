@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-// import '../core/api_client.dart';
+import '../core/api_client.dart';
 import '../core/environment.dart';
 import '../core/models.dart';
 import '../core/session_controller.dart';
 import '../widgets/church_logo.dart';
 import '../widgets/google_signin_button.dart';
+import 'forgot_password_page.dart';
 
 // import 'package:google_sign_in/google_sign_in.dart';
 
@@ -574,6 +575,21 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ),
                                     ],
+                                    const SizedBox(height: 8),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ForgotPasswordPage(session: widget.session),
+                                            ),
+                                          );
+                                        },
+                                        child: const Text('Lupa Password?'),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               )

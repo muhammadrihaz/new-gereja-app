@@ -196,6 +196,42 @@ class ApiClient {
     );
   }
 
+  Future<Map<String, dynamic>> verifyForgotPassword({
+    required String phoneNumber,
+    required String familyCardNumber,
+    required String birthDate,
+  }) async {
+    final response = await http.post(
+      _uri('/forgot-password/verify'),
+      headers: _headers(),
+      body: jsonEncode({
+        'phone_number': phoneNumber,
+        'family_card_number': familyCardNumber,
+        'birth_date': birthDate,
+      }),
+    );
+    final payload = await _decode(response) as Map<String, dynamic>;
+    return payload; // Using the whole payload since we return { success, message, reset_token } at root level
+  }
+
+  Future<Map<String, dynamic>> resetPassword({
+    required String resetToken,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    final response = await http.post(
+      _uri('/forgot-password/reset'),
+      headers: _headers(),
+      body: jsonEncode({
+        'reset_token': resetToken,
+        'password': password,
+        'password_confirmation': passwordConfirmation,
+      }),
+    );
+    final payload = await _decode(response) as Map<String, dynamic>;
+    return payload;
+  }
+
   Future<AuthSession> signInWithGoogle({
     required String idToken,
     required String fcmToken,
