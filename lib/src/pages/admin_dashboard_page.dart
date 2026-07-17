@@ -1285,9 +1285,13 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     final paged = _paginate(filtered, currentPage, _eventPerPage);
 
     return paged.map((event) {
-      final startAt =
+      final startAtRaw =
           (event['start_at'] as String?) ?? (event['date'] as String?) ?? '-';
-      final endAt = (event['end_at'] as String?) ?? '-';
+      final endAtRaw = (event['end_at'] as String?) ?? '-';
+      
+      final startAt = formatTanggalString(startAtRaw, includeTime: true);
+      final endAt = formatTanggalString(endAtRaw, includeTime: true);
+
       final category = _namaKategori(
         _kategoriEvent,
         (event['category'] as String?) ?? '-',
@@ -1347,10 +1351,12 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
               Text('Deskripsi: ${(event['description'] as String?) ?? '-'}'),
               const SizedBox(height: 8),
               Text(
-                'Mulai: ${(event['start_at'] as String?) ?? (event['date'] as String?) ?? '-'}',
+                'Mulai: ${formatTanggalString((event['start_at'] as String?) ?? (event['date'] as String?), includeTime: true)}',
               ),
               const SizedBox(height: 8),
-              Text('Selesai: ${(event['end_at'] as String?) ?? '-'}'),
+              Text(
+                'Selesai: ${formatTanggalString((event['end_at'] as String?), includeTime: true)}',
+              ),
               const SizedBox(height: 8),
               Text(
                 'Lokasi: ${(event['location']?['address'] as String?) ?? '-'}',
