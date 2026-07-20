@@ -1256,10 +1256,34 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
   void _lihatDetailPengajuan(Map<String, dynamic> item) {
     final status = item['status']?.toString() ?? '-';
     final category = item['category']?.toString() ?? '-';
-    final serviceDate = item['service_date']?.toString();
-    final serviceTime = item['service_time']?.toString();
+    final serviceDateRaw = item['service_date']?.toString();
+    final serviceTimeRaw = item['service_time']?.toString();
     final adminNote = item['admin_note']?.toString();
     final appColors = Theme.of(context).extension<AppColors>();
+    
+    String formattedDate = '-';
+    if (serviceDateRaw != null && serviceDateRaw.isNotEmpty) {
+      try {
+        final parts = serviceDateRaw.split(' ')[0].split('-');
+        if (parts.length >= 3) {
+          formattedDate = '${parts[2]}-${parts[1]}-${parts[0]}';
+        } else {
+          formattedDate = serviceDateRaw;
+        }
+      } catch (_) { formattedDate = serviceDateRaw; }
+    }
+
+    String formattedTime = '-';
+    if (serviceTimeRaw != null && serviceTimeRaw.isNotEmpty) {
+      try {
+        final splitted = serviceTimeRaw.split(':');
+        if (splitted.length >= 2) {
+          formattedTime = '${splitted[0]}:${splitted[1]}';
+        } else {
+          formattedTime = serviceTimeRaw;
+        }
+      } catch (_) { formattedTime = serviceTimeRaw; }
+    }
     
     showDialog(
       context: context,
@@ -1295,13 +1319,13 @@ class _JemaatDashboardPageState extends State<JemaatDashboardPage> {
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.calendar_today),
                     title: const Text('Tanggal Pelayanan'),
-                    subtitle: Text(serviceDate ?? '-'),
+                    subtitle: Text(formattedDate),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.access_time),
                     title: const Text('Jam Pelayanan'),
-                    subtitle: Text(serviceTime ?? '-'),
+                    subtitle: Text(formattedTime),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,

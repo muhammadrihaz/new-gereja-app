@@ -1665,22 +1665,29 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                     child: Text('Belum ada event'),
                   )
                 else
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columnSpacing: 16,
-                      columns: const [
-                        DataColumn(
-                          label: Text('Judul'),
-                          tooltip: 'Judul Event',
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                          child: DataTable(
+                            columnSpacing: 16,
+                            columns: const [
+                              DataColumn(
+                                label: Text('Judul'),
+                                tooltip: 'Judul Event',
+                              ),
+                              DataColumn(label: Text('Kategori')),
+                              DataColumn(label: Text('Mulai')),
+                              DataColumn(label: Text('Selesai')),
+                              DataColumn(label: Text('Aksi')),
+                            ],
+                            rows: _buildEventTableRows(),
+                          ),
                         ),
-                        DataColumn(label: Text('Kategori')),
-                        DataColumn(label: Text('Mulai')),
-                        DataColumn(label: Text('Selesai')),
-                        DataColumn(label: Text('Aksi')),
-                      ],
-                      rows: _buildEventTableRows(),
-                    ),
+                      );
+                    },
                   ),
                 const SizedBox(height: 12),
                 // Pagination
@@ -2154,6 +2161,8 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                               DataColumn(label: Text('Pemohon')),
                               DataColumn(label: Text('No KK')),
                               DataColumn(label: Text('Kategori')),
+                              DataColumn(label: Text('Tgl Pelayanan')),
+                              DataColumn(label: Text('Jam Pelayanan')),
                               DataColumn(label: Text('Status')),
                               DataColumn(label: Text('Aksi')),
                             ],
@@ -2217,12 +2226,40 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       final user = item['user'] as Map<String, dynamic>?;
       final noKk = (item['nomor_kk_snapshot'] as String?) ?? '-';
 
+      final serviceDateRaw = item['service_date']?.toString();
+      final serviceTimeRaw = item['service_time']?.toString();
+      
+      String formattedDate = '-';
+      if (serviceDateRaw != null && serviceDateRaw.isNotEmpty) {
+        try {
+          final parts = serviceDateRaw.split(' ')[0].split('-');
+          if (parts.length >= 3) {
+            formattedDate = '${parts[2]}-${parts[1]}-${parts[0]}';
+          } else {
+            formattedDate = serviceDateRaw;
+          }
+        } catch (_) { formattedDate = serviceDateRaw; }
+      }
+      String formattedTime = '-';
+      if (serviceTimeRaw != null && serviceTimeRaw.isNotEmpty) {
+        try {
+          final splitted = serviceTimeRaw.split(':');
+          if (splitted.length >= 2) {
+            formattedTime = '${splitted[0]}:${splitted[1]}';
+          } else {
+            formattedTime = serviceTimeRaw;
+          }
+        } catch (_) { formattedTime = serviceTimeRaw; }
+      }
+
       return DataRow(
         cells: [
           DataCell(Text('#$id')),
           DataCell(Text((user?['name'] as String?) ?? '-')),
           DataCell(Text(noKk)),
           DataCell(Text(category)),
+          DataCell(Text(formattedDate)),
+          DataCell(Text(formattedTime)),
           DataCell(
             Chip(
               label: Text(status),
@@ -2336,6 +2373,34 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     final user = item['user'] as Map<String, dynamic>?;
     final formData = (item['form_data'] as Map<String, dynamic>?) ?? {};
     final attachments = (item['attachments'] as List?) ?? [];
+    
+    final serviceDateRaw = item['service_date']?.toString();
+    final serviceTimeRaw = item['service_time']?.toString();
+    final adminNote = item['admin_note']?.toString();
+
+    String formattedDate = '-';
+    if (serviceDateRaw != null && serviceDateRaw.isNotEmpty) {
+      try {
+        final parts = serviceDateRaw.split(' ')[0].split('-');
+        if (parts.length >= 3) {
+          formattedDate = '${parts[2]}-${parts[1]}-${parts[0]}';
+        } else {
+          formattedDate = serviceDateRaw;
+        }
+      } catch (_) { formattedDate = serviceDateRaw; }
+    }
+
+    String formattedTime = '-';
+    if (serviceTimeRaw != null && serviceTimeRaw.isNotEmpty) {
+      try {
+        final splitted = serviceTimeRaw.split(':');
+        if (splitted.length >= 2) {
+          formattedTime = '${splitted[0]}:${splitted[1]}';
+        } else {
+          formattedTime = serviceTimeRaw;
+        }
+      } catch (_) { formattedTime = serviceTimeRaw; }
+    }
 
     showDialog(
       context: context,
@@ -2351,6 +2416,14 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
               Text('No KK: ${(item['nomor_kk_snapshot'] as String?) ?? '-'}'),
               const SizedBox(height: 8),
               Text('Status: $status'),
+              if (status == 'approved') ...[
+                const SizedBox(height: 8),
+                Text('Tanggal Pelayanan: $formattedDate'),
+                const SizedBox(height: 8),
+                Text('Jam Pelayanan: $formattedTime'),
+                const SizedBox(height: 8),
+                Text('Keterangan: ${adminNote == null || adminNote.isEmpty ? '-' : adminNote}'),
+              ],
               const SizedBox(height: 12),
               const Text(
                 'Data Pengajuan:',
