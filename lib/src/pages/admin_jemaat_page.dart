@@ -85,6 +85,16 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
   List<Map<String, dynamic>> get _filteredJemaat {
     var filtered = _jemaat;
 
+    // Pencarian berdasarkan nama / email
+    if (_searchQuery.trim().isNotEmpty) {
+      final query = _searchQuery.trim().toLowerCase();
+      filtered = filtered.where((j) {
+        final name = (j['name'] as String?)?.toLowerCase() ?? '';
+        final email = (j['email'] as String?)?.toLowerCase() ?? '';
+        return name.contains(query) || email.contains(query);
+      }).toList();
+    }
+
     if (_statusFilter != 'all') {
       filtered = filtered
           .where((j) => (j['status'] as String?) == _statusFilter)
@@ -94,9 +104,7 @@ class _AdminJemaatPageState extends State<AdminJemaatPage> {
     if (_kkFilter.isNotEmpty) {
       filtered = filtered
           .where(
-            (j) =>
-                (j['nomor_kk'] as String?)?.contains(_kkFilter).toString() ==
-                'true',
+            (j) => (j['nomor_kk'] as String?)?.contains(_kkFilter) == true,
           )
           .toList();
     }
